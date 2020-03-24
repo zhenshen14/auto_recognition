@@ -1,0 +1,7 @@
+{
+  "ocr_image_size": [32, 80],
+  "data_path": "D:\\the best",
+  "model_image_height": 32,
+  "model_image_ch": 1,
+  "model_rnn_size": 32
+}
