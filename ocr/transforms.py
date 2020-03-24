@@ -81,6 +81,8 @@ class CentralCrop(object):
 def get_transforms(out_size):
     return [Scale(out_size),
             CentralCrop(out_size),
+            BrightnessAugmentation(),
+            ContrastAugmentation(),
             ImageNormalization(),
             ToTensor()]
 

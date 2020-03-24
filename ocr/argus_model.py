@@ -46,8 +46,8 @@ class CRNNModel(Model):
         loss.backward()
         torch.nn.utils.clip_grad_value_(self.nn_module.parameters(), 10)
         self.optimizer.step()
-        print (sim_preds)
-        print (texts)
+        # print (sim_preds)
+        # print (texts)
 
         return {
             "prediction": sim_preds,

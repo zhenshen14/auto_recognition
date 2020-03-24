@@ -78,13 +78,13 @@ if __name__ == "__main__":
     model = CRNNModel(MODEL_PARAMS)
 
     callbacks = [
-        MonitorCheckpoint(EXPERIMENT_DIR, monitor="train_cer", max_saves=6),
+        MonitorCheckpoint(EXPERIMENT_DIR, monitor="val_cer", max_saves=6),
     ]
     # YOU CAN IMPLEMENT DIFFERENT METRICS AND USE THEM TO SEE HOW MANY CORRECT PREDICTION YOU HAVE
     metrics = [CER()]
     model.fit(
         train_loader,
-        # val_loader=val_loader,
+        val_loader=val_loader,
         max_epochs=NUM_EPOCHS,
         metrics=metrics,
         callbacks=callbacks,

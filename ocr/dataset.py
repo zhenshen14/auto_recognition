@@ -12,7 +12,7 @@ class OcrDataset(Dataset):
             files_list = files_list[:int(0.8*len(files_list))]
         else:
             files_list = files_list[int(0.8 * len(files_list)):]
-        files_list = sorted(os.listdir(data_path))[:32]
+        files_list = sorted(os.listdir(data_path))
         self.data = [os.path.join(data_path,w) for w in files_list]
         self.target = [w[5:-4].replace(' ','') for w in files_list]
         self.transforms = Compose(transforms)
