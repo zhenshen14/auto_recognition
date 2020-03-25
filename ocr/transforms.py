@@ -85,6 +85,11 @@ def get_transforms(out_size):
             ContrastAugmentation(),
             ImageNormalization(),
             ToTensor()]
+def get_transforms_pred(out_size):
+    return [Scale(out_size),
+            CentralCrop(out_size),
+            ImageNormalization(),
+            ToTensor()]
 
 
 #TODO: Your transforms here
