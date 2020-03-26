@@ -31,7 +31,7 @@ def setup_logging(path, level='INFO'):
 
 
 class CNDProject:
-    def __init__(self, name, video_path, save_path, fps=20, frame_size=(1600, 800), coord=(500, 500)):
+    def __init__(self, name, video_path, save_path, car_number, fps=15, frame_size=(1600, 800), coord=(500, 500)):
         self.name = name
         self.logger = logging.getLogger(self.name)
         self.state = State()
@@ -39,7 +39,7 @@ class CNDProject:
         self.ocr_stream = OcrStream("OcrStream", self.state, self.video_reader)
 
         self.visualize_stream = VisualizeStream("VisualizeStream", self.video_reader,
-                                                self.state, save_path, fps, frame_size, coord)
+                                                self.state, save_path,  fps, frame_size, coord, car_number)
         self.logger.info("Start Project")
 
     def start(self):
@@ -66,16 +66,17 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--log_path", required=True)
-    parser.add_argument("--level", default = "INFO")
+    parser.add_argument("--level", default="INFO")
     parser.add_argument("--video_path", required=True)
     parser.add_argument("--save_path", required=True)
+    parser.add_argument("--car_number", required=True)
     args = parser.parse_args()
 
     setup_logging(args.log_path, args.level)
     logger = logging.getLogger(__name__)
     project = None
     try:
-        project = CNDProject("CNDProject", args.video_path, args.save_path)
+        project = CNDProject("CNDProject", args.video_path, args.save_path, args.car_number)
         project.start()
     except Exception as e:
         logger.exception(e)

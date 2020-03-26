@@ -9,15 +9,26 @@ from worker.video_writer import VideoWriter
 
 
 class Visualizer:
-    def __init__(self, state: State, coord, color=(0, 0, 255), thick=2, font_scale=1.2, font=cv2.FONT_HERSHEY_SIMPLEX):
+    def __init__(self, state: State, coord, car_number, color=(0, 0, 255), thick=2, font_scale=1.2, font=cv2.FONT_HERSHEY_SIMPLEX):
         self.state = state
         self.coord_x, self.coord_y = coord
         self.color = color
         self.thickness = thick
         self.font_scale = font_scale
         self.font = font
+        self.car_number = car_number
+        self.accuracy = 0.0
 
     def _draw_ocr_text(self, text, frame):
+        i = 0
+        n = 0
+        while (i < len(text) and i < len(self.car_number)):
+            if text[i] == self.car_number[i]:
+                n += 1
+            i += 1
+        curr_acc = n/len(self.car_number)
+        if curr_acc > self.accuracy:
+            self.accuracy = curr_acc
         if text:
             frame = cv2.putText(frame, text,
                         (self.coord_x,self.coord_y),
@@ -35,7 +46,7 @@ class Visualizer:
 class VisualizeStream:
     def __init__(self, name,
                  in_video: VideoReader,
-                 state: State, video_path, fps, frame_size, coord):
+                 state: State, video_path, fps, frame_size, coord, car_number):
         self.name = name
         self.logger = logging.getLogger(self.name)
         self.state = state
@@ -43,13 +54,14 @@ class VisualizeStream:
         self.fps = fps
         self.frame_size = tuple(frame_size)
 
+
         self.out_video = VideoWriter("VideoWriter", video_path, self.fps, self.frame_size)
         self.sleep_time_vis = 1. / self.fps
         self.in_video = in_video
         self.stopped = True
         self.visualize_thread = None
 
-        self.visualizer = Visualizer(self.state, self.coord)
+        self.visualizer = Visualizer(self.state, self.coord, car_number)
 
         self.logger.info("Create VisualizeStream")
 
@@ -81,6 +93,7 @@ class VisualizeStream:
         # self.in_video.start()
 
     def stop(self):
+        self.logger.info("Accuracy:{}".format(self.visualizer.accuracy))
         self.logger.info("Stop VisualizeStream")
         self.stopped = True
         self.out_video.stop()

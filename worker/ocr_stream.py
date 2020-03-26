@@ -1,10 +1,9 @@
 import logging
 from threading import Thread
-
 from cnd.ocr.predictor import Predictor
 from worker.state import State
 from worker.video_reader import VideoReader
-
+import time
 
 class OcrStream:
     def __init__(self, name, state: State, video_reader: VideoReader):
@@ -15,14 +14,20 @@ class OcrStream:
         self.ocr_thread = None
         self.predictor = Predictor('C:\\Users\\user\\results\\experiment1\\model-052-1.928074.pth',(32, 80)) #TODO: Your Predictor
         self.logger.info("Create OcrStream")
+        self.time = None
+        self.frame_quantity = 0
 
     def _ocr_loop(self):
         try:
+            self.start_time = time.time()
             while True:
                 frame = self.video_reader.read()
                 pred = self.predictor.predict(frame)
                 self.state.text = pred
                 self.state.frame = frame
+                self.frame_quantity += 1
+                if self.frame_quantity % 10 == 0:
+                    print(self.frame_quantity / (time.time() - self.start_time))
 
         except Exception as e:
             self.logger.exception(e)
