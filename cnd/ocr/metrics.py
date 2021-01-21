@@ -17,7 +17,6 @@ class StringAccuracy(Metric):
             if preds[i] == targets[i]:
                 correct += 1
         return correct
-    # TODO: Count correct answers
 
     def compute(self):
         if self.count == 0:
@@ -80,6 +79,3 @@ class CER(Metric):
             # raise Exception('Must be at least one example for computation')
             return 0
         return self.cer_sum / self.count
-
-# TODO: In the same way you can write Accuracy by position of letter
-# or quality of negative examples and target
